@@ -14,7 +14,7 @@ public class Problem101 {
     		result += i;
     	}
 
-    	System.out.println(result);
+    	System.out.println("1～10を足した結果：" + result);
     }
 
 }
