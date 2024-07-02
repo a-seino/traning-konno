@@ -90,8 +90,33 @@ public class Problem01 {
         System.out.println("");
     }
 
-    public static void outputAnyNumber(List<Integer> dataList) {};
+    /*以下回答*/
+    // 3の倍数の一覧を出力
+    public static void outputAnyNumber(List<Integer> dataList) {
+    	System.out.println("3の倍数一覧");
 
-    public static void outputSortOddNumber(List<Integer> dataList) {};
+    	// 3で割り切れれば3の倍数
+    	for (Integer data : dataList) {
+    		if (data % 3 == 0) {
+    			System.out.print("[" + data + "]");
+    		}
+    	}
+
+		System.out.println("");
+    };
+
+    // 奇数の一覧を昇順ソートして出力
+    public static void outputSortOddNumber(List<Integer> dataList) {
+    	System.out.println("奇数一覧（昇順）");
+
+    	// 2で割り切れなければ奇数
+    	dataList.stream()
+    	.filter(s -> s % 2 != 0)
+    	.sorted()
+    	.map(s -> "[" + s + "]" )
+    	.forEach(System.out::print);
+
+    	System.out.println("");
+    };
 
 }
