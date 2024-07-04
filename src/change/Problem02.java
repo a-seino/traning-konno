@@ -479,14 +479,17 @@ public class Problem02 {
 		e = 9;
 		pivot = testList.get(4);
 
-
 		while (s >= e) {
 			while (true) {
-				if (testList.get(s) <= pivot) { break; }
+				if (testList.get(s) <= pivot) {
+					break;
+				}
 				s++;
 			}
 			while (true) {
-				if (testList.get(e) >= pivot) { break; }
+				if (testList.get(e) >= pivot) {
+					break;
+				}
 				e--;
 			}
 
@@ -496,11 +499,12 @@ public class Problem02 {
 			// ソート中のリストの状態確認
 			checkSort(testList, s, e);
 
-			if (s == e) { s++; }
+			if (s == e) {
+				s++;
+			}
 		}
 	}
 	// クイックソートを再帰処理なしでできるか？ここまで
-
 
 	/**
 	 * 引数で受け取ったリストをマージソートで昇順に並び替えたものを出力する。
@@ -641,6 +645,5 @@ public class Problem02 {
 		mergeSortDesc(list, auxList, mid + 1, high); // 右半分の処理
 		mergeDesc(list, auxList, low, mid, high); // 2つをマージ
 	}
-
 
 }
