@@ -29,26 +29,26 @@ public class Problem02 {
 
 		/* -- ここから問題 -- */
 		// バブルソートを使用して昇順ソート(テストデータは使いまわすため、コピーして使用)
-		bubbleSortAsc(new ArrayList<Integer>(testList));
+		//bubbleSortAsc(new ArrayList<Integer>(testList));
 
 		// バブルソートを使用して降順ソート(テストデータは使いまわすため、コピーして使用)
-		bubbleSortDesc(new ArrayList<Integer>(testList));
+		//bubbleSortDesc(new ArrayList<Integer>(testList));
 
 		// 他にどのようなソートアルゴリズムがあるか調べ、作成せよ
 		// 選択ソートを使用して昇順ソート
-		selectionSortAsc(new ArrayList<Integer>(testList));
+		//selectionSortAsc(new ArrayList<Integer>(testList));
 		// 選択ソートを使用して降順ソート
-		selectionSortDesc(new ArrayList<Integer>(testList));
+		//selectionSortDesc(new ArrayList<Integer>(testList));
 		// 挿入ソートを使用して昇順ソート
-		insertionSortAsc(new ArrayList<Integer>(testList));
+		//insertionSortAsc(new ArrayList<Integer>(testList));
 		// 挿入ソートを使用して降順ソート
-		insertionSortDesc(new ArrayList<Integer>(testList));
+		//insertionSortDesc(new ArrayList<Integer>(testList));
 		// クイックソートを使用して昇順ソート
-		quickSortAsc(new ArrayList<Integer>(testList));
+		//quickSortAsc(new ArrayList<Integer>(testList));
 		// クイックソートを使用して降順ソート
-		quickSortDesc(new ArrayList<Integer>(testList));
+		//quickSortDesc(new ArrayList<Integer>(testList));
 		// マージソートを使用して昇順ソート
-		mergeSortAsc(new ArrayList<Integer>(testList));
+		//mergeSortAsc(new ArrayList<Integer>(testList));
 		// マージソートを使用して降順ソート
 		mergeSortDesc(new ArrayList<Integer>(testList));
 	}
@@ -468,6 +468,40 @@ public class Problem02 {
 		quickSortDesc(testList, s, end);
 	}
 
+	// クイックソートを再帰処理なしでできるか？
+	public static void testQuickSort(List<Integer> testList) {
+		// ソートの軸になる要素の要素番号を保持する変数
+		int pivot;
+		// 要素の位置を保持する変数
+		int s, e;
+
+		s = 0;
+		e = 9;
+		pivot = testList.get(4);
+
+
+		while (s >= e) {
+			while (true) {
+				if (testList.get(s) <= pivot) { break; }
+				s++;
+			}
+			while (true) {
+				if (testList.get(e) >= pivot) { break; }
+				e--;
+			}
+
+			int tmpData = testList.get(s);
+			testList.set(s, testList.get(e));
+			testList.set(e, tmpData);
+			// ソート中のリストの状態確認
+			checkSort(testList, s, e);
+
+			if (s == e) { s++; }
+		}
+	}
+	// クイックソートを再帰処理なしでできるか？ここまで
+
+
 	/**
 	 * 引数で受け取ったリストをマージソートで昇順に並び替えたものを出力する。
 	 * @param testList 並び替え対象リスト
@@ -529,8 +563,8 @@ public class Problem02 {
 			return;
 		}
 
-		// リストの中点を探す シフト演算子がわからず代用も思いつかないためそのまま使用
-		int mid = low + ((high - low) >> 1);
+		// リストの中点を探す シフト演算子から書き換え
+		int mid = low + (high - low) / 2;
 
 		// 要素数が1になるまでリストを再帰的に分割→マージ
 		mergeSortAsc(list, auxList, low, mid); // 左半分の処理
@@ -599,12 +633,14 @@ public class Problem02 {
 			return;
 		}
 
-		// リストの中点を探す シフト演算子がわからず代用も思いつかないためそのまま使用
-		int mid = low + ((high - low) >> 1);
+		// リストの中点を探す シフト演算子から書き換え
+		int mid = low + (high - low) / 2;
 
 		// 要素数が1になるまでリストを再帰的に分割→マージ
 		mergeSortDesc(list, auxList, low, mid); // 左半分の処理
 		mergeSortDesc(list, auxList, mid + 1, high); // 右半分の処理
 		mergeDesc(list, auxList, low, mid, high); // 2つをマージ
 	}
+
+
 }
