@@ -187,9 +187,9 @@ public class Problem03 {
 				winCountB = 0;
 			}
 
-			// 条件式(i > 1 && (winCountA == 3 || winCountB == 3))も考えましたが
+			// 条件式(i > 1 && (winCountA > 2 || winCountB > 2))も考えましたが
 			// 最初の2回回避するより、そのあとの回すべてで比較内容が増えるほうがよくないのでは？と思い直しました。
-			if (winCountA == 3 || winCountB == 3) {
+			if (winCountA > 2 || winCountB > 2) {
 				break;
 			}
 		}
