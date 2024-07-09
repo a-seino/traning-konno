@@ -2,6 +2,7 @@ package change;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 
 import util.DateUtil;
 import util.NumericUtil;
@@ -52,7 +53,9 @@ public class Problem02 {
 		// マージソートを使用して降順ソート
 		//mergeSortDesc(new ArrayList<Integer>(testList));
 
-		testArrayQuickSort();
+		//testArrayQuickSort();
+		// 非再帰的なクイックソート(昇順)
+		nonRecursiveQuickSort(new ArrayList<Integer>(testList));
 	}
 
 	/**
@@ -494,7 +497,6 @@ public class Problem02 {
 
 	// クイックソートを再帰処理なしでできるか？
 	// 固定の配列をクイックソートで並び替えるとしたらどうするか考える
-
 	public static void testArrayQuickSort() {
 		int testArray[] = { 1, 6, 2, 5, 3, 4 };
 
@@ -608,63 +610,136 @@ public class Problem02 {
 		System.out.println("");
 	}
 
-	// 以下、スタックを使用したクイックソート(サンプル解析中です)
-	/*	    static void swap(int[] a, int i, int j) {
-	    int tmp = a[i];
-	    a[i] = a[j];
-	    a[j] = tmp;
+	// 以下、スタックを使用したクイックソート(サンプル解析時のコメントあり)
+	/*	// 値の入れ替えを行う関数
+		    static void swap(int[] a, int i, int j) {
+		    int tmp = a[i];
+		    a[i] = a[j];
+		    a[j] = tmp;
+		}
+		static int partition(int[] a, int low, int high) {
+		    int pivot = a[high]; // 対象の配列の一番右の要素を基準値にする
+		    int i = low - 1; //対象配列の最初の要素番号-1　配列で次に入れ替える場所のポインタの役割
+		    // pivot = 4 1 2
+		    for (int j = low; j < high; j++) {
+		        if (a[j] < pivot) {
+		            i++;
+		            swap(a, i, j);
+		        }
+		    }
+		    swap(a, i + 1, high);
+		    return i + 1;
+		}
+		static void quickSort(int[] a) {
+		    Stack<Integer> stack = new Stack<>();
+		    stack.push(0); // 配列の最初の要素番号
+		    stack.push(a.length - 1); // 配列の末尾の要素番号
+
+		    while (!stack.isEmpty()) {
+		        int high = stack.pop(); // 配列の末尾
+		        int low = stack.pop(); // 配列の最初
+
+		        if (low < high) { // 配列の分割部分が正しく指定されているか→指定されていない場合スタックには追加されない→ソートが終わるとスタックは空になる
+		            int pos = partition(a, low, high); // 並び替えた後の配列内の最小値が入っている要素番号
+		            if (pos - low < high - pos) { // 配列の最初から最小値の要素までの要素数(＝基準値より左)　が　配列の末尾から最小値の要素数(＝基準値より右)より小さいとき
+		            	// 分割部分の要素番号をスタックにいれる
+		            	stack.push(pos + 1);
+		                stack.push(high);
+		                stack.push(low);
+		                stack.push(pos - 1);
+		            } else {
+		            	// 分割部分の要素番号をスタックにいれる
+		                stack.push(low);
+		                stack.push(pos - 1);
+		                stack.push(pos + 1);
+		                stack.push(high);
+		            }
+		        }
+		    }
+		}
+		public static void testQuickSort() {
+		    int[] array = {5, 2, 9, 1, 5, 3, 7, 7, 1, 0};
+		    quickSort(array);
+
+		    System.out.println("Sorted array:");
+		    for (int num : array) {
+		        System.out.print(num + " ");
+		    }
+		}*/
+
+	/**
+	 * リスト内の要素の並び替えに使用
+	 * @param testList 並び替え対象リスト
+	 * @param i 並び替え対象の要素番号
+	 * @param j 要素番号 i の要素と入れ替える要素の要素番号
+	 */
+	public static void swap(List<Integer> testList, int i, int j) {
+		int tmpData = testList.get(i);
+		testList.set(i, testList.get(j));
+		testList.set(j, tmpData);
+		// ソート中のリストの状態確認
+		checkSort(testList, i, j);
 	}
 
-	static int partition(int[] a, int low, int high) {
-	    int pivot = a[high];
-	    int i = low - 1;
+	/**
+	 * 引数で渡されたリストを、非再帰のクイックソートで並び替える
+	 * @param testList 並び替え対象リスト
+	 */
+	public static void nonRecursiveQuickSort(List<Integer> testList) {
+		System.out.println("非再帰的なクイックソート（昇順）");
+		// 処理時間測定用に開始時間を取得
+		long startTime = System.currentTimeMillis();
 
-	    for (int j = low; j < high; j++) {
-	        if (a[j] < pivot) {
-	            i++;
-	            swap(a, i, j);
-	        }
-	    }
-	    swap(a, i + 1, high);
-	    return i + 1;
+		// ソート時に分割する部分の要素番号を保持するスタック
+		Stack<Integer> stack = new Stack<>();
+		// スタックに引数で渡されたリストの先頭と末尾の要素番号を入れる
+		stack.push(0); // リストの先頭＝対象範囲の一番左の要素番号
+		stack.push(testList.size() - 1); // リストの末尾 = 対象範囲の一番右の要素番号
+
+		// スタックから対象範囲を指定してソート→次の対象範囲の要素番号をスタックに入れる　を繰り返す
+		while (!stack.isEmpty()) {
+			// スタックから分割部分の要素番号を取得
+			int end = stack.pop(); // 対象範囲の一番右の要素番号
+			int start = stack.pop(); // 対象範囲の一番左の要素番号
+
+			if (start < end) { // 対象範囲が正しく指定されているとき
+				int pivot = testList.get(end); // 対象範囲の一番右の要素を基準とする
+				int i = start - 1; // ポインターとして使用 要素数を超えないように-1しておく
+				for (int j = start; j < end; j++) {
+					if (testList.get(j) < pivot) { // 一番左の要素から、基準値より小さい場合は並び替えていく
+						i++; // ポインタをひとつ右にずらす
+						swap(testList, i, j); // 要素番号 i と j の要素を入れ替え
+					}
+				}
+
+				// 基準値自体の並び替え(基準値を正しい位置(ポインタをひとつずらした位置)に入れ替える)
+				i++;
+				swap(testList, i, end);
+
+				// ポインターの左右を比べて要素数が多い側から、次のソート対象範囲としてスタックに要素番号を入れる(要素数の少ないほうから処理する)
+				if (i - start < end - i) {
+					// 次の対象範囲の要素番号をスタックにいれる
+					stack.push(i + 1);
+					stack.push(end);
+					stack.push(start);
+					stack.push(i - 1);
+				} else {
+					// 次の対象範囲の要素番号をスタックにいれる
+					stack.push(start);
+					stack.push(i - 1);
+					stack.push(i + 1);
+					stack.push(end);
+				}
+			}
+		}
+
+		// 処理時間測定用に終了時間を取得
+		long endTime = System.currentTimeMillis();
+
+		// 処理時間を出力
+		System.out.println("処理時間:" + DateUtil.getProcTime(startTime, endTime));
+		System.out.println("------------------------------------------");
 	}
-
-	static void quickSort(int[] a) {
-	    Stack<Integer> stack = new Stack<>();
-	    stack.push(0);
-	    stack.push(a.length - 1);
-
-	    while (!stack.isEmpty()) {
-	        int high = stack.pop();
-	        int low = stack.pop();
-
-	        if (low < high) {
-	            int pos = partition(a, low, high);
-
-	            if (pos - low < high - pos) {
-	                stack.push(pos + 1);
-	                stack.push(high);
-	                stack.push(low);
-	                stack.push(pos - 1);
-	            } else {
-	                stack.push(low);
-	                stack.push(pos - 1);
-	                stack.push(pos + 1);
-	                stack.push(high);
-	            }
-	        }
-	    }
-	}
-
-	public static void main(String[] args) {
-	    int[] array = {5, 2, 9, 1, 5, 6, 3};
-	    quickSort(array);
-
-	    System.out.println("Sorted array:");
-	    for (int num : array) {
-	        System.out.print(num + " ");
-	    }
-	}*/
 	// クイックソートを再帰処理なしでできるか？ここまで
 
 	/**
