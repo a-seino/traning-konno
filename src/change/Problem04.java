@@ -36,6 +36,8 @@ public class Problem04 {
 		 *
 		 */
 
+		// Switch文を使わずに集計する場合
+		aggregateNumberArray(countryList);
 	}
 
 	/**
@@ -63,6 +65,10 @@ public class Problem04 {
 		return retList;
 	}
 
+	/**
+	 * 国ごとの人口を集計し、コンソールに出力
+	 * @param countryList 1000人分の人口データ
+	 */
 	private static void aggregateNumber(List<Country> countryList) {
 		// ※ 判定にif文ではなく、switch文を使用すること
 		// 以下回答
@@ -75,38 +81,40 @@ public class Problem04 {
 		int itr = 0;
 		int fra = 0;
 		int aus = 0;
-
-		// 国ごとの人口をカウント・保持する配列を用意、各要素に0を代入→いったん保留
-		/*    	int counter[] = new int[countCountry];
-		    	for (int i = 0; i < countCountry; i++) {
-		    		counter[i] = 0;
-		    	}*/
+		int deu = 0;
+		int bel = 0;
 
 		for (Country country : countryList) {
-			switch (country.getNumber()) {
-			case 0:
-				jpn += 1;
+			switch (country) {
+			case JPN:
+				jpn++;
 				break;
-			case 1:
-				usa += 1;
+			case USA:
+				usa++;
 				break;
-			case 2:
-				chn += 1;
+			case CHN:
+				chn++;
 				break;
-			case 3:
-				ind += 1;
+			case IND:
+				ind++;
 				break;
-			case 4:
-				gbr += 1;
+			case GBR:
+				gbr++;
 				break;
-			case 5:
-				itr += 1;
+			case ITR:
+				itr++;
 				break;
-			case 6:
-				fra += 1;
+			case FRA:
+				fra++;
 				break;
-			case 7:
-				aus += 1;
+			case AUS:
+				aus++;
+				break;
+			case DEU:
+				deu++;
+				break;
+			case BEL:
+				bel++;
 				break;
 			default:
 				System.out.println("国情報に登録されていません：" + country.getNumber() + "「" + country.getJpName() + "」");
@@ -114,5 +122,42 @@ public class Problem04 {
 			}
 		}
 
+		// 国ごとの人口を出力
+		System.out.println("日本の人口：" + jpn + "人");
+		System.out.println("アメリカの人口：" + usa + "人");
+		System.out.println("中国の人口：" + chn + "人");
+		System.out.println("インドの人口：" + ind + "人");
+		System.out.println("イギリスの人口：" + gbr + "人");
+		System.out.println("イタリアの人口：" + itr + "人");
+		System.out.println("フランスの人口：" + fra + "人");
+		System.out.println("オーストラリアの人口：" + aus + "人");
+		System.out.println("ドイツの人口：" + deu + "人");
+		System.out.println("ベルギーの人口：" + bel + "人");
+		// カウント抜けがないかのチェック（すべて足して1000ならすべて集計されている）
+		//System.out.println(jpn + usa + chn + ind + gbr + itr + fra + aus + deu + bel);
+	}
+
+	// 以下、Switch文を使わずに集計するパターン
+	/**
+	 *  国ごとの人口を国番号と配列を用いて集計し、コンソールに出力
+	 * @param countryList 1000人分の人口データ
+	 */
+	public static void aggregateNumberArray(List<Country> countryList) {
+		// 国ごとの人口をカウント・保持する配列を用意、各要素に0を代入→いったん保留
+		int counter[] = new int[countryList.size()];
+		for (int i = 0; i < countryList.size(); i++) {
+			counter[i] = 0;
+		}
+
+		// 拡張for文で、国番号と対応する要素番号の値をインクリメントして人口を集計する
+		for (Country country : countryList) {
+			counter[country.getNumber()]++;
+		}
+
+		System.out.println("国番号を利用してカウントした場合");
+		// 拡張for文で国名と人口を出力
+		for (Country country : Country.values()) {
+			System.out.println(country.getJpName() + "の人口：" + counter[country.getNumber()] + "人");
+		}
 	}
 }
