@@ -2,6 +2,7 @@ package change;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 
 import util.DateUtil;
 import util.NumericUtil;
@@ -29,28 +30,32 @@ public class Problem02 {
 
 		/* -- ここから問題 -- */
 		// バブルソートを使用して昇順ソート(テストデータは使いまわすため、コピーして使用)
-		bubbleSortAsc(new ArrayList<Integer>(testList));
+		//bubbleSortAsc(new ArrayList<Integer>(testList));
 
 		// バブルソートを使用して降順ソート(テストデータは使いまわすため、コピーして使用)
-		bubbleSortDesc(new ArrayList<Integer>(testList));
+		//bubbleSortDesc(new ArrayList<Integer>(testList));
 
 		// 他にどのようなソートアルゴリズムがあるか調べ、作成せよ
 		// 選択ソートを使用して昇順ソート
-		selectionSortAsc(new ArrayList<Integer>(testList));
+		//selectionSortAsc(new ArrayList<Integer>(testList));
 		// 選択ソートを使用して降順ソート
-		selectionSortDesc(new ArrayList<Integer>(testList));
+		//selectionSortDesc(new ArrayList<Integer>(testList));
 		// 挿入ソートを使用して昇順ソート
-		insertionSortAsc(new ArrayList<Integer>(testList));
+		//insertionSortAsc(new ArrayList<Integer>(testList));
 		// 挿入ソートを使用して降順ソート
-		insertionSortDesc(new ArrayList<Integer>(testList));
+		//insertionSortDesc(new ArrayList<Integer>(testList));
 		// クイックソートを使用して昇順ソート
-		quickSortAsc(new ArrayList<Integer>(testList));
+		//quickSortAsc(new ArrayList<Integer>(testList));
 		// クイックソートを使用して降順ソート
-		quickSortDesc(new ArrayList<Integer>(testList));
+		//quickSortDesc(new ArrayList<Integer>(testList));
 		// マージソートを使用して昇順ソート
-		mergeSortAsc(new ArrayList<Integer>(testList));
+		//mergeSortAsc(new ArrayList<Integer>(testList));
 		// マージソートを使用して降順ソート
-		mergeSortDesc(new ArrayList<Integer>(testList));
+		//mergeSortDesc(new ArrayList<Integer>(testList));
+
+		//testArrayQuickSort();
+		// 非再帰的なクイックソート(昇順)
+		nonRecursiveQuickSort(new ArrayList<Integer>(testList));
 	}
 
 	/**
@@ -119,6 +124,10 @@ public class Problem02 {
 
 	}
 
+	/**
+	 * 引数で受け取ったリストをバブルソートで降順に並び替えたものを出力する。
+	 * @param testList
+	 */
 	public static void bubbleSortDesc(List<Integer> testList) {
 		// 以下回答
 		// 処理時間測定用に開始時間を取得
@@ -313,6 +322,12 @@ public class Problem02 {
 		System.out.println("------------------------------------------");
 	}
 
+	/**
+	 * 引数で渡したリストを、再帰処理を用いてソート→分割を繰り返して昇順に並び替える関数
+	 * @param testList 並び替え対象リスト
+	 * @param start 並び替え対象の最初の要素番号
+	 * @param end 並び替え対象の末尾の要素番号
+	 */
 	public static void quickSortAsc(List<Integer> testList, int start, int end) {
 		// ソートの軸になる要素の要素番号を保持する変数
 		int pivot;
@@ -348,19 +363,22 @@ public class Problem02 {
 			// sをインクリメントし、基準値以上の値を探す
 			while (true) {
 				s++;
-				if (testList.get(s) >= pivot)
-					break; // 処理一行のみなら中かっこ省略可
+				if (testList.get(s) >= pivot) {
+					break;
+				}
 			}
 			// eをデクリメントし、基準値以下の値を探す
 			while (true) {
 				e--;
-				if (testList.get(e) <= pivot)
+				if (testList.get(e) <= pivot) {
 					break;
+				}
 			}
 
 			// sがe以上なら終了(基準値をもとにした並び替えが終わった状態)
-			if (s >= e)
+			if (s >= e) {
 				break;
+			}
 
 			// 値の入れ替え
 			tmpData = testList.get(s);
@@ -371,8 +389,9 @@ public class Problem02 {
 		}
 
 		// sとeが同じならsをインクリメント
-		if (s == e)
+		if (s == e) {
 			s++;
+		}
 
 		// ブロックの分割
 		quickSortAsc(testList, start, e);
@@ -400,6 +419,12 @@ public class Problem02 {
 		System.out.println("------------------------------------------");
 	}
 
+	/**
+	 * 引数で渡したリストを、再帰処理でソート→分割を繰り返して昇順に並び替える関数
+	 * @param testList 並び替え対象リスト
+	 * @param start 並び替え対象の最初の要素番号
+	 * @param end 並び替え対象の末尾の要素番号
+	 */
 	public static void quickSortDesc(List<Integer> testList, int start, int end) {
 		// ソートの軸になる要素の要素番号を保持する変数
 		int pivot;
@@ -448,8 +473,9 @@ public class Problem02 {
 			}
 
 			// sがe以上なら終了(基準値をもとにした並び替えが終わった状態)
-			if (s >= e)
+			if (s >= e) {
 				break;
+			}
 
 			// 値の入れ替え
 			tmpData = testList.get(s);
@@ -460,13 +486,261 @@ public class Problem02 {
 		}
 
 		// sとeが同じならsをインクリメント
-		if (s == e)
+		if (s == e) {
 			s++;
+		}
 
 		// ブロックの分割
 		quickSortDesc(testList, start, e);
 		quickSortDesc(testList, s, end);
 	}
+
+	// クイックソートを再帰処理なしでできるか？
+	// 固定の配列をクイックソートで並び替えるとしたらどうするか考える
+	public static void testArrayQuickSort() {
+		int testArray[] = { 1, 6, 2, 5, 3, 4 };
+
+		int pivot = testArray[3];
+		int s = 0;
+		int e = testArray.length - 1;
+
+		// 1回目
+		while (true) {
+			while (true) {
+				if (testArray[s] >= pivot) {
+					break;
+				}
+				s++;
+			}
+			while (true) {
+				if (testArray[e] <= pivot) {
+					break;
+				}
+				e--;
+			}
+			if (s >= e) {
+				break;
+			}
+
+			int tmpData = testArray[s];
+			testArray[s] = testArray[e];
+			testArray[e] = tmpData;
+
+			if (s == e) {
+				s++;
+			}
+
+		}
+
+		for (int i : testArray) {
+			System.out.print("[" + i + "]");
+		}
+		System.out.println("");
+
+		// 2回目
+		pivot = testArray[1];
+		s = 0;
+		e = 3;
+
+		while (true) {
+			while (true) {
+				if (testArray[s] >= pivot) {
+					break;
+				}
+				s++;
+			}
+			while (true) {
+				if (testArray[e] <= pivot) {
+					break;
+				}
+				e--;
+			}
+			if (s >= e) {
+				break;
+			}
+
+			int tmpData = testArray[s];
+			testArray[s] = testArray[e];
+			testArray[e] = tmpData;
+
+			if (s == e) {
+				s++;
+			}
+		}
+
+		for (int i : testArray) {
+			System.out.print("[" + i + "]");
+		}
+		System.out.println("");
+
+		// 3回目
+		pivot = testArray[1];
+		s = 0;
+		e = 2;
+
+		while (true) {
+			while (true) {
+				if (testArray[s] >= pivot) {
+					break;
+				}
+				s++;
+			}
+			while (true) {
+				if (testArray[e] <= pivot) {
+					break;
+				}
+				e--;
+			}
+			if (s >= e) {
+				break;
+			}
+
+			int tmpData = testArray[s];
+			testArray[s] = testArray[e];
+			testArray[e] = tmpData;
+
+			if (s == e) {
+				s++;
+			}
+		}
+
+		for (int i : testArray) {
+			System.out.print("[" + i + "]");
+		}
+		System.out.println("");
+	}
+
+	// 以下、スタックを使用したクイックソート(サンプル解析時のコメントあり)
+	/*	// 値の入れ替えを行う関数
+		    static void swap(int[] a, int i, int j) {
+		    int tmp = a[i];
+		    a[i] = a[j];
+		    a[j] = tmp;
+		}
+		static int partition(int[] a, int low, int high) {
+		    int pivot = a[high]; // 対象の配列の一番右の要素を基準値にする
+		    int i = low - 1; //対象配列の最初の要素番号-1　配列で次に入れ替える場所のポインタの役割
+		    // pivot = 4 1 2
+		    for (int j = low; j < high; j++) {
+		        if (a[j] < pivot) {
+		            i++;
+		            swap(a, i, j);
+		        }
+		    }
+		    swap(a, i + 1, high);
+		    return i + 1;
+		}
+		static void quickSort(int[] a) {
+		    Stack<Integer> stack = new Stack<>();
+		    stack.push(0); // 配列の最初の要素番号
+		    stack.push(a.length - 1); // 配列の末尾の要素番号
+
+		    while (!stack.isEmpty()) {
+		        int high = stack.pop(); // 配列の末尾
+		        int low = stack.pop(); // 配列の最初
+
+		        if (low < high) { // 配列の分割部分が正しく指定されているか→指定されていない場合スタックには追加されない→ソートが終わるとスタックは空になる
+		            int pos = partition(a, low, high); // 並び替えた後の配列内の最小値が入っている要素番号
+		            if (pos - low < high - pos) { // 配列の最初から最小値の要素までの要素数(＝基準値より左)　が　配列の末尾から最小値の要素数(＝基準値より右)より小さいとき
+		            	// 分割部分の要素番号をスタックにいれる
+		            	stack.push(pos + 1);
+		                stack.push(high);
+		                stack.push(low);
+		                stack.push(pos - 1);
+		            } else {
+		            	// 分割部分の要素番号をスタックにいれる
+		                stack.push(low);
+		                stack.push(pos - 1);
+		                stack.push(pos + 1);
+		                stack.push(high);
+		            }
+		        }
+		    }
+		}
+		public static void testQuickSort() {
+		    int[] array = {5, 2, 9, 1, 5, 3, 7, 7, 1, 0};
+		    quickSort(array);
+
+		    System.out.println("Sorted array:");
+		    for (int num : array) {
+		        System.out.print(num + " ");
+		    }
+		}*/
+
+	/**
+	 * リスト内の要素の並び替えに使用
+	 * @param testList 並び替え対象リスト
+	 * @param i 並び替え対象の要素番号
+	 * @param j 要素番号 i の要素と入れ替える要素の要素番号
+	 */
+	public static void swap(List<Integer> testList, int i, int j) {
+		int tmpData = testList.get(i);
+		testList.set(i, testList.get(j));
+		testList.set(j, tmpData);
+		// ソート中のリストの状態確認
+		checkSort(testList, i, j);
+	}
+
+	/**
+	 * 引数で渡されたリストを、非再帰のクイックソートで並び替える
+	 * @param testList 並び替え対象リスト
+	 */
+	public static void nonRecursiveQuickSort(List<Integer> testList) {
+		System.out.println("非再帰的なクイックソート（昇順）");
+		// 処理時間測定用に開始時間を取得
+		long startTime = System.currentTimeMillis();
+
+		// ソート時に分割する部分の要素番号を保持するスタック
+		Stack<Integer> stack = new Stack<>();
+		// スタックに引数で渡されたリストの先頭と末尾の要素番号を入れる
+		stack.push(0); // リストの先頭＝対象範囲の一番左の要素番号
+		stack.push(testList.size() - 1); // リストの末尾 = 対象範囲の一番右の要素番号
+
+		// スタックから対象範囲を指定してソート→次の対象範囲の要素番号をスタックに入れる　を繰り返す
+		while (!stack.isEmpty()) {
+			// スタックから分割部分の要素番号を取得
+			int end = stack.pop(); // 対象範囲の一番右の要素番号
+			int start = stack.pop(); // 対象範囲の一番左の要素番号
+
+			if (start < end) { // 対象範囲が正しく指定されているとき
+				int pivot = testList.get(end); // 対象範囲の一番右の要素を基準とする
+				int i = start - 1; // ポインターとして使用 要素数を超えないように-1しておく
+				for (int j = start; j < end; j++) {
+					if (testList.get(j) < pivot) { // 一番左の要素から、基準値より小さい場合は並び替えていく
+						i++; // ポインタをひとつ右にずらす
+						swap(testList, i, j); // 要素番号 i と j の要素を入れ替え
+					}
+				}
+
+				// 基準値自体の並び替え(基準値を正しい位置(ポインタをひとつずらした位置)に入れ替える)
+				i++;
+				swap(testList, i, end);
+
+				// ポインターの左右を比べて要素数が多い側から、次のソート対象範囲としてスタックに要素番号を入れる(要素数の少ないほうから処理する)
+				if (i - start < end - i) {
+					// 次の対象範囲の要素番号をスタックにいれる
+					stack.push(i + 1);
+					stack.push(end);
+					stack.push(start);
+					stack.push(i - 1);
+				} else {
+					// 次の対象範囲の要素番号をスタックにいれる
+					stack.push(start);
+					stack.push(i - 1);
+					stack.push(i + 1);
+					stack.push(end);
+				}
+			}
+		}
+
+		// 処理時間測定用に終了時間を取得
+		long endTime = System.currentTimeMillis();
+
+		// 処理時間を出力
+		System.out.println("処理時間:" + DateUtil.getProcTime(startTime, endTime));
+		System.out.println("------------------------------------------");
+	}
+	// クイックソートを再帰処理なしでできるか？ここまで
 
 	/**
 	 * 引数で受け取ったリストをマージソートで昇順に並び替えたものを出力する。
@@ -490,6 +764,14 @@ public class Problem02 {
 		System.out.println("------------------------------------------");
 	}
 
+	/**
+	 * ソートされた2つのリストを昇順にソートしてマージする
+	 * @param list 並び替え対象のリスト
+	 * @param auxList 並び替え対象のリストのコピー
+	 * @param low 並び替え対象のリストの最初の要素番号
+	 * @param mid リストの中点
+	 * @param high 並び替え対象のリストの末尾の要素番号
+	 */
 	public static void mergeAsc(List<Integer> list, List<Integer> auxList, int low, int mid, int high) {
 		// 要素番号として使う変数を用意
 		int k = low;
@@ -523,14 +805,21 @@ public class Problem02 {
 		}
 	}
 
+	/**
+	 * 再帰処理でリストを分割・昇順にソートしてマージする
+	 * @param list 並び替え対象のリスト
+	 * @param auxList 並び替え対象のリストのコピー
+	 * @param low 並び替え対象のリストの最初の要素番号
+	 * @param high 並び替え対象のリストの末尾の要素番号
+	 */
 	public static void mergeSortAsc(List<Integer> list, List<Integer> auxList, int low, int high) {
 		// 対象リストの要素数が1以下の場合
 		if (high <= low) {
 			return;
 		}
 
-		// リストの中点を探す シフト演算子がわからず代用も思いつかないためそのまま使用
-		int mid = low + ((high - low) >> 1);
+		// リストの中点を探す シフト演算子から書き換え
+		int mid = low + (high - low) / 2;
 
 		// 要素数が1になるまでリストを再帰的に分割→マージ
 		mergeSortAsc(list, auxList, low, mid); // 左半分の処理
@@ -560,6 +849,14 @@ public class Problem02 {
 		System.out.println("------------------------------------------");
 	}
 
+	/**
+	 * ソートされた2つのリストを降順にソートしてマージする
+	 * @param list 並び替え対象のリスト
+	 * @param auxList 並び替え対象のリストのコピー
+	 * @param low 並び替え対象のリストの最初の要素番号
+	 * @param mid リストの中点
+	 * @param high 並び替え対象のリストの末尾の要素番号
+	 */
 	public static void mergeDesc(List<Integer> list, List<Integer> auxList, int low, int mid, int high) {
 		// 要素番号として使う変数を用意
 		int k = low;
@@ -593,18 +890,26 @@ public class Problem02 {
 		}
 	}
 
+	/**
+	 * 再帰処理でリストを分割・降順にソートしてマージする
+	 * @param list 並び替え対象のリスト
+	 * @param auxList 並び替え対象のリストのコピー
+	 * @param low 並び替え対象のリストの最初の要素番号
+	 * @param high 並び替え対象のリストの末尾の要素番号
+	 */
 	public static void mergeSortDesc(List<Integer> list, List<Integer> auxList, int low, int high) {
 		// 対象リストの要素数が1以下の場合
 		if (high <= low) {
 			return;
 		}
 
-		// リストの中点を探す シフト演算子がわからず代用も思いつかないためそのまま使用
-		int mid = low + ((high - low) >> 1);
+		// リストの中点を探す シフト演算子から書き換え
+		int mid = low + (high - low) / 2;
 
 		// 要素数が1になるまでリストを再帰的に分割→マージ
 		mergeSortDesc(list, auxList, low, mid); // 左半分の処理
 		mergeSortDesc(list, auxList, mid + 1, high); // 右半分の処理
 		mergeDesc(list, auxList, low, mid, high); // 2つをマージ
 	}
+
 }
