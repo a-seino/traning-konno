@@ -37,24 +37,29 @@ public class Problem06 {
             int leftPointer = left;
             int rightPointer = right;
 
-            while (leftPointer <= rightPointer) {
+            while (leftPointer < rightPointer) {
                 // 左から基準値を超える要素を探す。（存在しない場合は基準値自体が対象となる）
-                while (left == 0/*　問題 「left == 0」を削除し、実装せよ*/) {
+                while (array[leftPointer] <= pivotData && leftPointer < array.length - 2/*　問題 「left == 0」を削除し、実装せよ*/) {
                     leftPointer++;
                 }
                 // 右から基準値未満の要素を探す。（存在しない場合は基準値自体が対象となる）
-                while (left == 0/*　問題 「left == 0」を削除し、実装せよ*/) {
+                while (array[rightPointer] >= pivotData && rightPointer > 0/*　問題 「left == 0」を削除し、実装せよ*/) {
                     rightPointer--;
                 }
 
-                if (left == 0/*　問題 「left == 0」を削除し、実装せよ*/) {
+                if (leftPointer < rightPointer/*　問題 「left == 0」を削除し、実装せよ*/) {
                     int tmp = array[leftPointer];
                     array[leftPointer] = array[rightPointer];
                     array[rightPointer] = tmp;
                     leftPointer++;
                     rightPointer--;
                 }
+
+                if(leftPointer > rightPointer) {
+                	return;
+                }
             }
+
             // 左半分、右半分を再帰的に呼び出す
             quickSort(array, left, rightPointer);
             quickSort(array, leftPointer, right);
