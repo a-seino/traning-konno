@@ -31,7 +31,7 @@ public class Problem06 {
      * @param right 要素の末尾
      */
     private static void quickSort(int[] array, int left, int right) {
-        if (left <= right) {
+        if (left < right) {
             // 基準値（ピボット）
             int pivotData = array[(left + right) / 2];
             int leftPointer = left;
@@ -39,24 +39,20 @@ public class Problem06 {
 
             while (leftPointer < rightPointer) {
                 // 左から基準値を超える要素を探す。（存在しない場合は基準値自体が対象となる）
-                while (array[leftPointer] <= pivotData && leftPointer < array.length - 2/*　問題 「left == 0」を削除し、実装せよ*/) {
+                while (array[leftPointer] < pivotData/*　問題 「left == 0」を削除し、実装せよ*/) {
                     leftPointer++;
                 }
                 // 右から基準値未満の要素を探す。（存在しない場合は基準値自体が対象となる）
-                while (array[rightPointer] >= pivotData && rightPointer > 0/*　問題 「left == 0」を削除し、実装せよ*/) {
+                while (array[rightPointer] > pivotData/*　問題 「left == 0」を削除し、実装せよ*/) {
                     rightPointer--;
                 }
 
-                if (leftPointer < rightPointer/*　問題 「left == 0」を削除し、実装せよ*/) {
+                if (leftPointer <= rightPointer/*　問題 「left == 0」を削除し、実装せよ*/) {
                     int tmp = array[leftPointer];
                     array[leftPointer] = array[rightPointer];
                     array[rightPointer] = tmp;
                     leftPointer++;
                     rightPointer--;
-                }
-
-                if(leftPointer > rightPointer) {
-                	return;
                 }
             }
 
