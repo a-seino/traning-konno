@@ -16,8 +16,6 @@ public class Flower extends Plant {
 
 		if (3 >= number) {
 			Earth.getInstance().birthCreature(new Flower(2));
-			Earth.getInstance().birthCreature(new Flower(2));
-			Earth.getInstance().birthCreature(new Flower(2));
 			System.out.println(this.getClass().getSimpleName() + "は花を咲かせて種子を残す");
 		} else {
 			System.out.println(this.getClass().getSimpleName() + "は何もしない");
