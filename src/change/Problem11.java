@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import race.Driver;
 import race.ExtremeDriver;
@@ -60,18 +61,34 @@ public class Problem11 {
         boat03.setFuel(100);
 
 
-        List<Boat> boatList = Arrays.asList(boat01, boat02, boat03);
+        //List<Boat> boatList = Arrays.asList(boat01, boat02, boat03);
 
         // レースの走行距離
-        int mileage = 50;
+        int mileage = 1000;
 
-        rase(boatList, mileage);
-        graphicalRace(boatList, mileage);
+        //rase(boatList, mileage);
+        //graphicalRace(boatList, mileage);
 
         /* -- ここから問題 -- */
         /*
          * エンジン、プロペラ、ボート、ドライバーを追加しレースをせよ
          */
+        // 以下回答
+        Engine engine04 = new PowerEngine();
+        Propeller propeller04 = new PowerPropeller();
+        Boat boat04 = new FastBoat(engine04, propeller04, "04");
+
+        Driver driver04 = new ExtremeDriver();
+        boat04.ride(driver04);
+        boat04.setFuel(100);
+
+        List<Boat> boatList2 = Arrays.asList(boat01, boat02, boat03, boat04);
+
+        System.out.println("エンジン、プロペラ、ボート、ドライバーを追加しレースをする");
+        rase(boatList2, mileage);
+        //graphicalRace(boatList2, mileage);
+
+
 
         /*
          * レースの走行距離が長い場合、燃料が切れてレースが終わらない。
@@ -125,10 +142,13 @@ public class Problem11 {
                         (Boat s) -> 0)); // 値は進んだ距離のため0固定にする
 
         boolean isRace = true;
+        // 参加しているボートの燃料が全て切れた場合、レースを中断するように修正
+        int fuelFlg = 0;
 
         // どれかがゴールするまで続ける
         do {
-            int fuelFlg = 0;
+        	// ループするごとに0になってしまい、燃料切れのボートのカウントができないのでdo-while文の外で宣言する
+            // int fuelFlg = 0;
             for (Boat boat : list) {
                 /* ---------- 燃料すべて0対応 START ---------- */
                 if (boat.getFuel() == 0) {
@@ -136,6 +156,7 @@ public class Problem11 {
                     if (fuelFlg == list.size()) {
                         isRace = false;
                         System.out.println("ボートの燃料が全て切れたので、レースを中断します");
+                        break;
                     }
                 }
                 /* ---------- 燃料すべて0対応 END ---------- */
@@ -205,6 +226,76 @@ public class Problem11 {
      * @param list 出場車リスト
      * @param distance 距離
      */
-    public static void graphicalRace(List<Boat> list, int distance) {}
+    public static void graphicalRace(List<Boat> list, int distance) {
+    	// ゴールまでの距離を示す部分を作成
+    	//String goal = "|ゴール";
+/*    	for (int i = 0; i < distance; i++) {
+    		goal = "=" + goal;
+    	}*/
+    	String goal = String.join("", Stream.generate(() -> "=").limit(distance).collect(Collectors.toList())) + "|ゴール";
+
+        // 出場車のリストを表示する
+        list.stream().forEach(boat -> boat.outputInfo());
+
+        // それぞれのボートが進んだ距離を保持するマップを作成する
+        Map<String, Integer> distanceMap = list.stream()
+                .collect(Collectors.toMap(
+                        (Boat s) -> s.getBoatName(), // キーをボートの番号にする
+                        (Boat s) -> 0)); // 値は進んだ距離のため0固定にする
+
+        boolean isRace = true;
+        // 参加しているボートの燃料が全て切れた場合、レースを中断するように修正
+        int fuelFlg = 0;
+
+        // どれかがゴールするまで続ける
+        do {
+        	// ループするごとに0になってしまい、燃料切れのボートのカウントができないのでdo-while文の外で宣言する
+            // int fuelFlg = 0;
+            for (Boat boat : list) {
+                /* ---------- 燃料すべて0対応 START ---------- */
+                if (boat.getFuel() == 0) {
+                    fuelFlg++ ;
+                    if (fuelFlg == list.size()) {
+                        isRace = false;
+                        System.out.println("ボートの燃料が全て切れたので、レースを中断します");
+                        break;
+                    }
+                }
+                /* ---------- 燃料すべて0対応 END ---------- */
+                int addDistance = boat.drive();
+                //System.out.println(boat.getBoatName() + "が" + addDistance + "進みました");
+
+                // 進んだ距離をマップに設定する
+                int curDistance = distanceMap.get(boat.getBoatName());
+                distanceMap.put(boat.getBoatName(), curDistance + addDistance);
+            }
+
+            // 進んだ距離を視覚的に表示
+            System.out.println(goal);
+
+            //list.stream()
+            //	.map((Boat s) -> Stream.generate(() -> ">").limit(distanceMap.get(s.getBoatName())) + s.getBoatName())
+            //	.forEach(System.out::println);
+
+            for (Boat boat : list) {
+            	int curDistance = distanceMap.get(boat.getBoatName());
+
+            }
+
+            for (String key : distanceMap.keySet()) {
+                // 進んだ距離の累計を取得
+                int curDistance = distanceMap.get(key);
+                System.out.println(key + "がトータルで" + curDistance + "進みました");
+
+                if (curDistance > distance) {
+                    isRace = false;
+                }
+            }
+        } while(isRace);
+
+        // 結果を出力
+        judge(distanceMap);
+
+    }
 
 }
