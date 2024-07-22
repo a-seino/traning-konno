@@ -34,7 +34,7 @@ public abstract class Car implements Vehicle {
     /**
      * 車を識別するための車体名
      */
-    private String boatName = null;
+    private String carName = null;
 
     private Car() {
         // デフォルトコンストラクタは実行不可とする
@@ -47,14 +47,14 @@ public abstract class Car implements Vehicle {
      * @param boatName 車体番号
      * @return セットアップ済みの車
      */
-    public Car (Engine engine, Tire tire, String boatName) {
+    public Car (Engine engine, Tire tire, String carName) {
         this.engine = engine;
         this.tire = tire;
-        this.boatName = boatName;
+        this.carName = carName;
     }
 
     public void outputInfo() {
-        System.out.println("--------- 車体番号" + boatName + "の情報 ---------");
+        System.out.println("--------- 車体番号" + carName + "の情報 ---------");
         System.out.println("ドライバー:" + driver.getClass().getSimpleName());
         System.out.println("エンジン:" + engine.getClass().getSimpleName());
         System.out.println("タイヤ:" + tire.getClass().getSimpleName());
@@ -163,8 +163,8 @@ public abstract class Car implements Vehicle {
      * 車体名を返却する。
      * @return 車体名
      */
-    public final String getBoatName() {
-        return boatName;
+    public final String getCarName() {
+        return carName;
     }
 
     /**
