@@ -163,7 +163,7 @@ public abstract class Car implements Vehicle {
      * 車体名を返却する。
      * @return 車体名
      */
-    public final String getCarName() {
+    public final String getBoatName() {
         return carName;
     }
 

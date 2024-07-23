@@ -311,16 +311,26 @@ public class Problem11 {
 								.forEach(System.out::println);
 			*/
 
-			// 進んだ距離の累計とゴール判定
-			for (String key : distanceMap.keySet()) {
+			/*			// 進んだ距離の累計とゴール判定
+						for (String key : distanceMap.keySet()) {
+							// 進んだ距離の累計を取得
+							int curDistance = distanceMap.get(key);
+							// 進んだ距離を示すための文字列を生成
+							String graphicalMileage = String.join("",
+									Stream.generate(() -> ">").limit(curDistance).collect(Collectors.toList()));
+							// ボートのListから、keyとボートの名前が一致するものを探して、進んだ距離とボート名を連結して出力
+							list.stream().filter(s -> s.getBoatName() == key).map(s -> graphicalMileage + s.getBoatName())
+									.forEach(System.out::println);
+			*/
+
+			// 進んだ距離の累計とゴール判定（ループ修正）
+			for (Boat boat : list) {
 				// 進んだ距離の累計を取得
-				int curDistance = distanceMap.get(key);
+				int curDistance = distanceMap.get(boat.getBoatName());
 				// 進んだ距離を示すための文字列を生成
 				String graphicalMileage = String.join("",
 						Stream.generate(() -> ">").limit(curDistance).collect(Collectors.toList()));
-				// ボートのListから、keyとボートの名前が一致するものを探して、進んだ距離とボート名を連結して出力
-				list.stream().filter(s -> s.getBoatName() == key).map(s -> graphicalMileage + s.getBoatName())
-						.forEach(System.out::println);
+				System.out.println(boat.getBoatName() + graphicalMileage);
 
 				if (curDistance > distance) {
 					isRace = false;
@@ -343,7 +353,7 @@ public class Problem11 {
 		// それぞれのボートが進んだ距離を保持するマップを作成する
 		Map<String, Integer> distanceMap = list.stream()
 				.collect(Collectors.toMap(
-						(Car s) -> s.getCarName(), // キーをボートの番号にする
+						(Car s) -> s.getBoatName(), // キーをボートの番号にする
 						(Car s) -> 0)); // 値は進んだ距離のため0固定にする
 
 		boolean isRace = true;
@@ -366,23 +376,33 @@ public class Problem11 {
 				int addDistance = car.drive();
 
 				// 進んだ距離をマップに設定する
-				int curDistance = distanceMap.get(car.getCarName());
-				distanceMap.put(car.getCarName(), curDistance + addDistance);
+				int curDistance = distanceMap.get(car.getBoatName());
+				distanceMap.put(car.getBoatName(), curDistance + addDistance);
 			}
 
 			// 進んだ距離を視覚的に表示
 			System.out.println(goal);
 
-			// 進んだ距離の累計とゴール判定
-			for (String key : distanceMap.keySet()) {
+			/*			// 進んだ距離の累計とゴール判定
+						for (String key : distanceMap.keySet()) {
+							// 進んだ距離の累計を取得
+							int curDistance = distanceMap.get(key);
+							// 進んだ距離を示すための文字列を生成
+							String graphicalMileage = String.join("",
+									Stream.generate(() -> ">").limit(curDistance).collect(Collectors.toList()));
+							// ボートのListから、keyとボートの名前が一致するものを探して、進んだ距離とボート名を連結して出力
+							list.stream().filter(s -> s.getBoatName() == key).map(s -> graphicalMileage + s.getBoatName())
+									.forEach(System.out::println);
+			*/
+
+			// 進んだ距離の累計とゴール判定（ループ修正）
+			for (Car car : list) {
 				// 進んだ距離の累計を取得
-				int curDistance = distanceMap.get(key);
+				int curDistance = distanceMap.get(car.getBoatName());
 				// 進んだ距離を示すための文字列を生成
 				String graphicalMileage = String.join("",
 						Stream.generate(() -> ">").limit(curDistance).collect(Collectors.toList()));
-				// ボートのListから、keyとボートの名前が一致するものを探して、進んだ距離とボート名を連結して出力
-				list.stream().filter(s -> s.getCarName() == key).map(s -> graphicalMileage + s.getCarName())
-						.forEach(System.out::println);
+				System.out.println(car.getBoatName() + graphicalMileage);
 
 				if (curDistance > distance) {
 					isRace = false;
