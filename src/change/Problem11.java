@@ -330,7 +330,7 @@ public class Problem11 {
 				// 進んだ距離を示すための文字列を生成
 				String graphicalMileage = String.join("",
 						Stream.generate(() -> ">").limit(curDistance).collect(Collectors.toList()));
-				System.out.println(boat.getBoatName() + graphicalMileage);
+				System.out.println(graphicalMileage + boat.getBoatName());
 
 				if (curDistance > distance) {
 					isRace = false;
@@ -402,7 +402,7 @@ public class Problem11 {
 				// 進んだ距離を示すための文字列を生成
 				String graphicalMileage = String.join("",
 						Stream.generate(() -> ">").limit(curDistance).collect(Collectors.toList()));
-				System.out.println(car.getBoatName() + graphicalMileage);
+				System.out.println(graphicalMileage + car.getBoatName());
 
 				if (curDistance > distance) {
 					isRace = false;
