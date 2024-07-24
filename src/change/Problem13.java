@@ -6,10 +6,8 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
-import race.wrap.BottomWrapper;
-import race.wrap.SideWrapper;
+import race.wrap.AllWrapper;
 import race.wrap.StringWrapper;
-import race.wrap.TopWrapper;
 
 /**
  * 入出力の問題
@@ -74,20 +72,23 @@ public class Problem13 {
 		String inputStr = null;
 
 		try {
-
 			inputStr = read.readLine();
 			System.out.println(inputStr + "をラップします");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 
-		// 上をラップする
+/*		// 上をラップする
 		StringWrapper top = new TopWrapper();
 		System.out.println(top.wrap(inputStr, '*'));
 		// 横と下をラップする
 		StringWrapper side = new SideWrapper();
 		StringWrapper bottom = new BottomWrapper();
 		System.out.println(bottom.wrap(side.wrap(inputStr, '*'), '*'));
+*/
+		// 上/左右/下をラッピングする
+		StringWrapper allWrap = new AllWrapper();
+		System.out.println(allWrap.wrap(inputStr, '*'));
 
 	}
 
@@ -131,14 +132,17 @@ public class Problem13 {
 			}
 		}
 
-		// 上をラップする
-		StringWrapper top = new TopWrapper();
-		System.out.println(top.wrap(build.toString(), '-'));
-		// 横と下をラップする
-		StringWrapper side = new SideWrapper();
-		StringWrapper bottom = new BottomWrapper();
-		System.out.println(bottom.wrap(side.wrap(build.toString(), '|'), '-'));
-
+		/*		// 上をラップする
+				StringWrapper top = new TopWrapper();
+				System.out.println(top.wrap(build.toString(), '-'));
+				// 横と下をラップする
+				StringWrapper side = new SideWrapper();
+				StringWrapper bottom = new BottomWrapper();
+				System.out.println(bottom.wrap(side.wrap(build.toString(), '|'), '-'));
+		*/
+		// 上/左右/下をラッピングする
+		StringWrapper allWrap = new AllWrapper();
+		System.out.println(allWrap.wrap(build.toString(), '*'));
 	}
 
 }

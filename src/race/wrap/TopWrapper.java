@@ -1,5 +1,10 @@
 package race.wrap;
 
+/**
+ * 入力文字列の上部をラッピングするクラス
+ * @author 紺野由夏
+ *
+ */
 public class TopWrapper implements StringWrapper {
 
 	@Override
@@ -9,16 +14,8 @@ public class TopWrapper implements StringWrapper {
 
 		StringBuilder retBuilder = new StringBuilder();
 
-		int maxSize = 0;
-
-		// 入力された文字列の最大文字数を調べる
-		for (int i = 0; i < targetLine.length; i++) {
-			// 各行の最も長い文字数をベースにラッピング数を決める
-			int curSize = getWrappingCount(targetLine[i]);
-			if (maxSize < curSize) {
-				maxSize = curSize;
-			}
-		}
+		// 最大文字数を調べる
+		int maxSize = getMaxSize(targetLine);
 
 		// 最大文字数+2字分の指定文字を出力
 		for (int i = 0; i < maxSize + 2; i++) {

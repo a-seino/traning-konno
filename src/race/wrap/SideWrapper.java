@@ -14,14 +14,8 @@ public class SideWrapper implements StringWrapper {
 
 		StringBuilder retBuilder = new StringBuilder();
 
-		// 最大の文字数を保持する変数
-		int maxSize = 0;
-		// 標準入力から受け取った文字列の中から、最大の文字数を探す
-		for (int i = 0; i < targetLine.length; i++) {
-			if (targetLine[i].length() > maxSize) {
-				maxSize = targetLine[i].length();
-			}
-		}
+		// 最大文字数を調べる
+		int maxSize = getMaxSize(targetLine);
 
 		// 各行にラッピング文字を設定
 		for (int i = 0; i < targetLine.length; i++) {
@@ -39,12 +33,6 @@ public class SideWrapper implements StringWrapper {
 			// 改行コードで分割して要素数が2つ以上の時で最後の要素以外の時に改行を戻し入れる
 			if (2 <= targetLine.length && i < targetLine.length - 1) {
 				retBuilder.append(System.lineSeparator());
-			}
-
-			// 各行の最も長い文字数をベースにラッピング数を決める
-			int curSize = getWrappingCount(targetLine[i]);
-			if (maxSize < curSize) {
-				maxSize = curSize;
 			}
 		}
 		return retBuilder.toString();
