@@ -63,6 +63,7 @@ public interface StringWrapper {
 				return maxSize;
 		*/
 
+		// Streamで最大文字数を探す（日報コメントより）
 		// Streamのmaxメソッドで最長の文字列を探す→Optionalのgetメソッドで文字列を取得→文字数を返す
 		return Stream.of(targetLine).max(Comparator.comparing(String::length)).get().length();
 	}
