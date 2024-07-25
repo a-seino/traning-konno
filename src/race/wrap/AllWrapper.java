@@ -1,7 +1,5 @@
 package race.wrap;
 
-import java.util.Arrays;
-
 /**
  *入力文字列の上/左右/下をラッピングするクラス
  * @author 紺野由夏
@@ -19,17 +17,27 @@ public class AllWrapper implements StringWrapper {
 		int maxSize = getMaxSize(targetLine);
 
 		// 上部・下部のラッピング用文字列を用意
-		String TopBottomWrap = TopBottomWrapper(maxSize, wrapper);
+		String topBottomWrap = TopBottomWrapper(maxSize, wrapper);
 
 		// 上部のラッピングを設定
-		retBuilder.append(TopBottomWrap + System.lineSeparator());
+		retBuilder.append(topBottomWrap + System.lineSeparator());
 
 		// 左右のラッピングを設定
-		Arrays.stream(targetLine).map(s -> wrapper + s + wrapper)
-				.forEach(s -> retBuilder.append(s + System.lineSeparator()));
+
+		/*		Arrays.stream(targetLine).map(s -> wrapper + s + wrapper)
+						.forEach(s -> retBuilder.append(s + System.lineSeparator()));
+		*/
+
+		for (String str : targetLine) {
+			retBuilder.append(wrapper + str);
+			for (int i = str.length(); i < maxSize; i++) {
+				retBuilder.append(" ");
+			}
+			retBuilder.append(wrapper + System.lineSeparator());
+		}
 
 		// 下部のラッピングを設定
-		retBuilder.append(TopBottomWrap);
+		retBuilder.append(topBottomWrap);
 
 		return retBuilder.toString();
 	}

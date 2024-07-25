@@ -1,5 +1,8 @@
 package race.wrap;
 
+import java.util.Comparator;
+import java.util.stream.Stream;
+
 import util.StringUtil;
 
 /**
@@ -47,15 +50,21 @@ public interface StringWrapper {
 	 * @return ラッピング対象文字列の最大文字数
 	 */
 	default int getMaxSize(String[] targetLine) {
-		// 最大の文字数を保持する変数
-		int maxSize = 0;
-		// 標準入力から受け取った文字列の中から、最大の文字数を探す
-		for (int i = 0; i < targetLine.length; i++) {
-			if (targetLine[i].length() > maxSize) {
-				maxSize = targetLine[i].length();
-			}
-		}
-		return maxSize;
+		/*		// 最大の文字数を保持する変数
+				int maxSize = 0;
+				// 標準入力から受け取った文字列の中から、最大の文字数を探す
+				for (int i = 0; i < targetLine.length; i++) {
+					if (targetLine[i].length() > maxSize) {
+						maxSize = targetLine[i].length();
+					}
+				}
+
+
+				return maxSize;
+		*/
+
+		// Streamのmaxメソッドで最長の文字列を探す→Optionalのgetメソッドで文字列を取得→文字数を返す
+		return Stream.of(targetLine).max(Comparator.comparing(String::length)).get().length();
 	}
 
 }

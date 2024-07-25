@@ -22,11 +22,15 @@ public class SideWrapper implements StringWrapper {
 			retBuilder.append(wrapper);
 			retBuilder.append(targetLine[i]);
 			// 最大文字数に合わせて空白を後ろにつける
-			if (targetLine[i].length() < maxSize) {
-				int whitespaceSize = maxSize - targetLine[i].length();
-				for (int j = 0; j < whitespaceSize; j++) {
-					retBuilder.append(" ");
-				}
+			/*			if (targetLine[i].length() < maxSize) {
+							int whitespaceSize = maxSize - targetLine[i].length();
+							for (int j = 0; j < whitespaceSize; j++) {
+								retBuilder.append(" ");
+							}
+						}
+			*/
+			for (int j = targetLine[i].length(); j < maxSize; j++) {
+				retBuilder.append(" ");
 			}
 			retBuilder.append(wrapper);
 

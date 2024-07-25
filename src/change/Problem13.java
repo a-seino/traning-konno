@@ -78,14 +78,15 @@ public class Problem13 {
 			e.printStackTrace();
 		}
 
-/*		// 上をラップする
-		StringWrapper top = new TopWrapper();
-		System.out.println(top.wrap(inputStr, '*'));
-		// 横と下をラップする
-		StringWrapper side = new SideWrapper();
-		StringWrapper bottom = new BottomWrapper();
-		System.out.println(bottom.wrap(side.wrap(inputStr, '*'), '*'));
-*/
+		/*		// 上をラップする
+				StringWrapper top = new TopWrapper();
+				System.out.println(top.wrap(inputStr, '*'));
+				// 横と下をラップする
+				StringWrapper side = new SideWrapper();
+				StringWrapper bottom = new BottomWrapper();
+				System.out.println(bottom.wrap(side.wrap(inputStr, '*'), '*'));
+		*/
+
 		// 上/左右/下をラッピングする
 		StringWrapper allWrap = new AllWrapper();
 		System.out.println(allWrap.wrap(inputStr, '*'));
