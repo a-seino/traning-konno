@@ -1,11 +1,14 @@
 package change;
 
 import java.io.BufferedReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.UncheckedIOException;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -89,13 +92,44 @@ public class Problem14 {
 			*/
 
 			// 2問目　ファイル出力（途中）
-			FileWriter fileWriter = new FileWriter("./data/in/Problem14_02.csv");
+
+			// FileWriter：出力内容が文字化けしてしまう
+			/*			FileWriter fileWriter = new FileWriter(new File("./data/in/Problem14_02.csv"));
+
+						String line = null;
+						while ((line = reader.readLine()) != null) {
+							fileWriter.write(sum(line));
+							fileWriter.write(System.lineSeparator());
+						}
+						fileWriter.close();
+			*/
+
+			// BufferedWriterを使用；文字化けする（OutputStreamで文字コードの指定が必要）
+			/*			BufferedWriter writer = new BufferedWriter(new FileWriter("./data/in/Problem14_02.csv"));
+
+						String line = null;
+						while ((line = reader.readLine()) != null) {
+							writer.write(sum(line));
+							writer.newLine();
+						}
+
+						writer.close();
+			*/
+
+			// Filesを使用
 			String line = null;
+			// 書き込みたいファイルのパス
+			Path filePath = Paths.get("./data/in/Problem14_02.csv");
+			// 書き込みたい文字列を保持するList
+			List<String> sumList = new ArrayList<>();
+
 			while ((line = reader.readLine()) != null) {
-				fileWriter.write(line + "/n");
+				sumList.add(String.valueOf(sum(line)));
 			}
 
-			fileWriter.close();
+			// Files.write:引数にパス(Pathオブジェクト)、書き込みたい文字列、エンコードしたい文字コード、ファイル読み込み方法の指定
+			Files.write(filePath, sumList, Charset.forName("UTF-8"), StandardOpenOption.TRUNCATE_EXISTING);
+
 		} catch (IOException e) {
 			throw new UncheckedIOException(e);
 		}
