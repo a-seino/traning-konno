@@ -17,10 +17,10 @@ public class AllWrapper implements StringWrapper {
 		int maxSize = getMaxSize(targetLine);
 
 		// 上部・下部のラッピング用文字列を用意
-		String topBottomWrap = TopBottomWrapper(maxSize, wrapper);
+		String topBottomWrap = topBottomWrapper(maxSize, wrapper);
 
 		// 上部のラッピングを設定
-		retBuilder.append(topBottomWrap + System.lineSeparator());
+		retBuilder.append(topBottomWrap).append(System.lineSeparator());
 
 		// 左右のラッピングを設定
 
@@ -29,11 +29,11 @@ public class AllWrapper implements StringWrapper {
 		*/
 
 		for (String str : targetLine) {
-			retBuilder.append(wrapper + str);
+			retBuilder.append(wrapper).append(str);
 			for (int i = str.length(); i < maxSize; i++) {
 				retBuilder.append(" ");
 			}
-			retBuilder.append(wrapper + System.lineSeparator());
+			retBuilder.append(wrapper).append(System.lineSeparator());
 		}
 
 		// 下部のラッピングを設定
@@ -48,7 +48,7 @@ public class AllWrapper implements StringWrapper {
 	 * @param wrapper ラッピングする文字列
 	 * @return 上部・下部のラッピングで使う文字列
 	 */
-	String TopBottomWrapper(int maxSize, char wrapper) {
+	String topBottomWrapper(int maxSize, char wrapper) {
 		StringBuilder retBuilder = new StringBuilder();
 		// 最大文字数+2字分の指定文字を設定
 		for (int i = 0; i < maxSize + 2; i++) {
