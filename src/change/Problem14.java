@@ -3,11 +3,10 @@ package change;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.UncheckedIOException;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
@@ -105,7 +104,8 @@ public class Problem14 {
 			*/
 
 			// BufferedWriterを使用；文字化けする（OutputStreamで文字コードの指定が必要）
-			/*			BufferedWriter writer = new BufferedWriter(new FileWriter("./data/in/Problem14_02.csv"));
+			/*			String outPath = "./data/out/Problem14_02_out.csv";
+						BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(outPath), StandardCharsets.UTF_8));
 
 						String line = null;
 						while ((line = reader.readLine()) != null) {
@@ -113,22 +113,22 @@ public class Problem14 {
 							writer.newLine();
 						}
 
-						writer.close();
-			*/
+						writer.close();*/
 
 			// Filesを使用
 			String line = null;
+			String path = "./data/out/Problem14_02_out.csv";
 			// 書き込みたいファイルのパス
-			Path filePath = Paths.get("./data/in/Problem14_02.csv");
+			Path filePath = Paths.get(path);
 			// 書き込みたい文字列を保持するList
 			List<String> sumList = new ArrayList<>();
 
 			while ((line = reader.readLine()) != null) {
-				sumList.add(String.valueOf(sum(line)));
+				sumList.add(String.valueOf(calc(line)));
 			}
 
 			// Files.write:引数にパス(Pathオブジェクト)、書き込みたい文字列、エンコードしたい文字コード、ファイル読み込み方法の指定
-			Files.write(filePath, sumList, Charset.forName("UTF-8"), StandardOpenOption.TRUNCATE_EXISTING);
+			Files.write(filePath, sumList, StandardCharsets.UTF_8);
 
 		} catch (IOException e) {
 			throw new UncheckedIOException(e);
@@ -144,7 +144,8 @@ public class Problem14 {
 		try (Stream<String> stream = Files.lines(Paths.get("./data/in/Problem14_01.csv"))) {
 
 			stream.forEach(line -> {
-				System.out.println(sum(line));
+				// System.out.println(sum(line));
+				System.out.println(calc(line));
 			});
 		} catch (IOException e) {
 			throw new UncheckedIOException(e);
@@ -164,7 +165,8 @@ public class Problem14 {
 			throw new UncheckedIOException(e);
 		}
 		for (String line : lines) {
-			System.out.println(sum(line));
+			//System.out.println(sum(line));
+			System.out.println(calc(line));
 		}
 	}
 
@@ -179,5 +181,55 @@ public class Problem14 {
 			sum += Integer.parseInt(val);
 		}
 		return sum;
+	}
+
+	/**
+	 * 入力値を元に演算した結果を返却する
+	 * @param line 対象文字列
+	 * @return 計算結果
+	 */
+	protected static int calc(String line) {
+		int ans = 0;
+		// 入力値をカンマ区切りにした配列
+		String input[] = line.split(",");
+
+		// 計算する用に数値だけ別配列で保持
+		int num[] = new int[2];
+		num[0] = Integer.parseInt(input[0]);
+		num[1] = Integer.parseInt(input[1]);
+
+		// 配列inputの要素数確認用
+		//System.out.println("配列の長さ:" + input.length);
+
+		// 配列の中身確認用
+		//for (String s : input) {
+		//	System.out.println("配列の中身(入力値):" + s);
+		//}
+
+		//for (int i : num) {
+		//	System.out.println("配列の中身(数値):" + i);
+		//}
+
+		// 入力されていた演算子と一致する計算結果を返す
+		switch (input[2]) {
+		case "+":
+			ans = num[0] + num[1];
+			break;
+
+		case "-":
+			ans = num[0] - num[1];
+			break;
+
+		case "*":
+			ans = num[0] * num[1];
+			break;
+
+		case "/":
+			ans = num[0] / num[1];
+			break;
+		}
+
+		//System.out.println("ans:" + ans);
+		return ans;
 	}
 }
