@@ -343,6 +343,11 @@ public class Problem11 {
 
 	}
 
+	/**
+	 * レース状況を視覚的に表示しながら実施する（レース対象：Carクラス）
+	 * @param list 出場車リスト
+	 * @param distance 距離
+	 */
 	public static void graphicalCarRace(List<Car> list, int distance) {
 		// ゴールまでの距離を示す部分を作成
 		String goal = String.join("", Stream.generate(() -> "=").limit(distance).collect(Collectors.toList())) + "|ゴール";
