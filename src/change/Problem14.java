@@ -9,6 +9,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 import java.util.stream.Stream;
 
 /**
@@ -104,16 +105,21 @@ public class Problem14 {
 			*/
 
 			// BufferedWriterを使用；文字化けする（OutputStreamで文字コードの指定が必要）
-			/*			String outPath = "./data/out/Problem14_02_out.csv";
-						BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(outPath), StandardCharsets.UTF_8));
+			//String outPath = "./data/out/Problem14_02_out.csv";
+			//BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(outPath), StandardCharsets.UTF_8));
 
-						String line = null;
-						while ((line = reader.readLine()) != null) {
-							writer.write(sum(line));
-							writer.newLine();
-						}
+			/*
+				String outPath = "./data/out/Problem14_02_out.csv";
+				BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(outPath), StandardCharsets.UTF_8));
 
-						writer.close();*/
+				String line = null;
+				while ((line = reader.readLine()) != null) {
+					writer.write(String.valueOf(calc(line)));
+					writer.newLine();
+				}
+
+				writer.close();
+			*/
 
 			// Filesを使用
 			String line = null;
@@ -123,8 +129,11 @@ public class Problem14 {
 			// 書き込みたい文字列を保持するList
 			List<String> sumList = new ArrayList<>();
 
+			int preAns = 0;
 			while ((line = reader.readLine()) != null) {
-				sumList.add(String.valueOf(calc(line)));
+				int ans = calc(line, preAns);
+				sumList.add(String.valueOf(ans));
+				preAns = ans;
 			}
 
 			// Files.write:引数にパス(Pathオブジェクト)、書き込みたい文字列、エンコードしたい文字コード、ファイル読み込み方法の指定
@@ -145,7 +154,7 @@ public class Problem14 {
 
 			stream.forEach(line -> {
 				// System.out.println(sum(line));
-				System.out.println(calc(line));
+				System.out.println(rpnCalc(line));
 			});
 		} catch (IOException e) {
 			throw new UncheckedIOException(e);
@@ -164,9 +173,14 @@ public class Problem14 {
 		} catch (IOException e) {
 			throw new UncheckedIOException(e);
 		}
+
+		int preAns = 0;
 		for (String line : lines) {
 			//System.out.println(sum(line));
-			System.out.println(calc(line));
+			//System.out.println(calc(line));
+			int ans = calc(line, preAns);
+			System.out.println(ans);
+			preAns = ans;
 		}
 	}
 
@@ -190,6 +204,7 @@ public class Problem14 {
 	 */
 	protected static int calc(String line) {
 		int ans = 0;
+
 		// 入力値をカンマ区切りにした配列
 		String input[] = line.split(",");
 
@@ -227,9 +242,115 @@ public class Problem14 {
 		case "/":
 			ans = num[0] / num[1];
 			break;
+
+		default:
+			throw new IllegalArgumentException("演算子以外の文字を取得しました：" + input[2]);
 		}
 
-		//System.out.println("ans:" + ans);
+		return ans;
+	}
+
+	/**
+	 * 入力値を元に演算した結果を返却する(問題4：1つ前の計算結果を加算)
+	 * @param line 対象文字列
+	 * @param pre 一つ前の計算結果
+	 * @return
+	 */
+	protected static int calc(String line, int pre) {
+		int ans = 0;
+		int preAns = pre;
+
+		// 入力値をカンマ区切りにした配列
+		String input[] = line.split(",");
+
+		// 計算する用に数値だけ別配列で保持
+		int num[] = new int[2];
+		num[0] = Integer.parseInt(input[0]);
+		num[1] = Integer.parseInt(input[1]);
+
+		// 配列inputの要素数確認用
+		//System.out.println("配列の長さ:" + input.length);
+
+		// 配列の中身確認用
+		//for (String s : input) {
+		//	System.out.println("配列の中身(入力値):" + s);
+		//}
+
+		//for (int i : num) {
+		//	System.out.println("配列の中身(数値):" + i);
+		//}
+
+		// 入力されていた演算子と一致する計算結果を返す
+		switch (input[2]) {
+		case "+":
+			ans = num[0] + num[1];
+			break;
+
+		case "-":
+			ans = num[0] - num[1];
+			break;
+
+		case "*":
+			ans = num[0] * num[1];
+			break;
+
+		case "/":
+			ans = num[0] / num[1];
+			break;
+
+		default:
+			throw new IllegalArgumentException("演算子以外の文字を取得しました：" + input[2]);
+		}
+
+		// ひとつ前の計算結果を加算した値を返す
+		return ans + preAns;
+	}
+
+	/**
+	 * 逆ポーランド記法で複数回演算した結果を返却する
+	 * @param line 対象文字列
+	 * @return 計算結果
+	 */
+	protected static int rpnCalc(String line) {
+		int ans = 0;
+		int value1 = 0;
+		int value2 = 0;
+		Stack<Integer> stack = new Stack<>();
+
+		for (String s : line.split(",")) {
+			// 入力されていた演算子と一致する計算結果を返す
+			switch (s) {
+			case "+":
+				value1 = stack.pop();
+				value2 = stack.pop();
+				stack.push(value2 + value1);
+				break;
+
+			case "-":
+				value1 = stack.pop();
+				value2 = stack.pop();
+				stack.push(value2 - value1);
+				break;
+
+			case "*":
+				value1 = stack.pop();
+				value2 = stack.pop();
+				stack.push(value2 * value1);
+				break;
+
+			case "/":
+				value1 = stack.pop();
+				value2 = stack.pop();
+				stack.push(value2 / value1);
+				break;
+
+			default:
+				stack.push(Integer.valueOf(s));
+				break;
+			}
+		}
+
+		ans = stack.pop();
 		return ans;
 	}
 }
