@@ -10,6 +10,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
+import java.util.function.BiFunction;
 import java.util.stream.Stream;
 
 /**
@@ -257,53 +258,8 @@ public class Problem14 {
 	 * @return
 	 */
 	protected static int calc(String line, int pre) {
-		int ans = 0;
-		int preAns = pre;
-
-		// 入力値をカンマ区切りにした配列
-		String input[] = line.split(",");
-
-		// 計算する用に数値だけ別配列で保持
-		int num[] = new int[2];
-		num[0] = Integer.parseInt(input[0]);
-		num[1] = Integer.parseInt(input[1]);
-
-		// 配列inputの要素数確認用
-		//System.out.println("配列の長さ:" + input.length);
-
-		// 配列の中身確認用
-		//for (String s : input) {
-		//	System.out.println("配列の中身(入力値):" + s);
-		//}
-
-		//for (int i : num) {
-		//	System.out.println("配列の中身(数値):" + i);
-		//}
-
-		// 入力されていた演算子と一致する計算結果を返す
-		switch (input[2]) {
-		case "+":
-			ans = num[0] + num[1];
-			break;
-
-		case "-":
-			ans = num[0] - num[1];
-			break;
-
-		case "*":
-			ans = num[0] * num[1];
-			break;
-
-		case "/":
-			ans = num[0] / num[1];
-			break;
-
-		default:
-			throw new IllegalArgumentException("演算子以外の文字を取得しました：" + input[2]);
-		}
-
 		// ひとつ前の計算結果を加算した値を返す
-		return ans + preAns;
+		return calc(line) + pre;
 	}
 
 	/**
@@ -312,45 +268,54 @@ public class Problem14 {
 	 * @return 計算結果
 	 */
 	protected static int rpnCalc(String line) {
-		int ans = 0;
-		int value1 = 0;
-		int value2 = 0;
+		//int ans = 0;
+		//int value1 = 0;
+		//int value2 = 0;
 		Stack<Integer> stack = new Stack<>();
 
 		for (String s : line.split(",")) {
+			BiFunction<Integer, Integer, Integer> bf = null;
 			// 入力されていた演算子と一致する計算結果を返す
 			switch (s) {
 			case "+":
-				value1 = stack.pop();
-				value2 = stack.pop();
-				stack.push(value2 + value1);
+				/*			value1 = stack.pop();
+							value2 = stack.pop();
+							stack.push(value2 + value1);*/
+				bf = (x, y) -> y + x;
 				break;
 
 			case "-":
-				value1 = stack.pop();
-				value2 = stack.pop();
-				stack.push(value2 - value1);
+				/*				value1 = stack.pop();
+								value2 = stack.pop();
+								stack.push(value2 - value1);*/
+				bf = (x, y) -> y - x;
 				break;
 
 			case "*":
-				value1 = stack.pop();
-				value2 = stack.pop();
-				stack.push(value2 * value1);
+				/*				value1 = stack.pop();
+								value2 = stack.pop();
+								stack.push(value2 * value1);*/
+				bf = (x, y) -> y * x;
 				break;
 
 			case "/":
-				value1 = stack.pop();
-				value2 = stack.pop();
-				stack.push(value2 / value1);
+				/*				value1 = stack.pop();
+								value2 = stack.pop();
+								stack.push(value2 / value1);*/
+				bf = (x, y) -> y / x;
 				break;
 
 			default:
+				bf = null;
 				stack.push(Integer.valueOf(s));
 				break;
 			}
+
+			if (bf != null) {
+				stack.push(bf.apply(stack.pop(), stack.pop()));
+			}
 		}
 
-		ans = stack.pop();
-		return ans;
+		return stack.pop();
 	}
 }
