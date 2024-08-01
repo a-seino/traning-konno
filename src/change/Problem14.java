@@ -152,10 +152,17 @@ public class Problem14 {
 	 */
 	protected static void execStream() {
 		try (Stream<String> stream = Files.lines(Paths.get("./data/in/Problem14_01.csv"))) {
+			// 前の計算結果を保持するリスト
+			List<Integer> preAns = new ArrayList<>();
+			// 一回目の計算用に0を入れておく
+			preAns.add(Integer.valueOf(0));
 
 			stream.forEach(line -> {
 				// System.out.println(sum(line));
-				System.out.println(rpnCalc(line));
+				int ans = calc(line, preAns.get(0).intValue());
+				preAns.clear();
+				preAns.add(ans);
+				System.out.println(ans);
 			});
 		} catch (IOException e) {
 			throw new UncheckedIOException(e);
@@ -306,7 +313,6 @@ public class Problem14 {
 				break;
 
 			default:
-				bf = null;
 				stack.push(Integer.valueOf(s));
 				break;
 			}
