@@ -34,12 +34,12 @@ public class BinaryFormatFileManager extends RebuildFileManager {
 
 	@Override
 	Function<Path, Path> getRebuildRule() {
-        return p -> {
-            String path = p.toString();
-            // javaの表記上のエスケープと正規表現のエスケープのため「\」は倍必要
-            String replacePath = path.replaceAll("data\\\\in", "data\\\\out");
-            return Paths.get(replacePath);
-        };
+		return p -> {
+			String path = p.toString();
+			// javaの表記上のエスケープと正規表現のエスケープのため「\」は倍必要
+			String replacePath = path.replaceAll("data\\\\in", "data\\\\out");
+			return Paths.get(replacePath);
+		};
 	}
 
 	@Override

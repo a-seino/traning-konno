@@ -26,6 +26,7 @@ public class Problem15 {
 		RebuildFileManager manager = new BinaryFormatFileManager(new NestSearch(), new SimpleRule("Problem15"));
 		manager.rebuild(Paths.get("./data/in"));
 
+
 		/*
 		 * ここから問題
 		 * 問題①

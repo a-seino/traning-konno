@@ -107,6 +107,7 @@ public abstract class RebuildFileManager {
 			}
 		});
 
+
 		// ファイル作成
 		for (Path path : rebuildMap.keySet()) {
 			// 書き込み先ファイル
