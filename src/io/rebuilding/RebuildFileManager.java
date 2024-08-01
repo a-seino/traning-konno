@@ -161,17 +161,19 @@ public abstract class RebuildFileManager {
 		for (String str : readAllFiles) {
 			// 1行を「。」で区切る
 			String line[] = str.split(delimiter);
-			// 「。」の後に改行コードを入れる
+
+			StringBuilder builder = new StringBuilder();
+
 			for (String s : line) {
 				// 1行ごとにリストに追加する
-				StringBuilder builder = new StringBuilder();
 				builder.append(s);
-				// 空行でなければ「。」を追加
+				// 空行でなければ「。」を追加（区切るときに消えた「。」を戻す）
 				if (!s.isEmpty()) {
 					builder.append(delimiter);
 				}
-
 				readFiles.add(builder.toString());
+				// StringBuilderをリセット
+				builder.setLength(0);
 			}
 		}
 

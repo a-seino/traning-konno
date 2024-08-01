@@ -2,9 +2,9 @@ package change;
 
 import java.nio.file.Paths;
 
+import io.rebuilding.BinaryFormatFileManager;
 import io.rebuilding.NestSearch;
 import io.rebuilding.RebuildFileManager;
-import io.rebuilding.SampleManager;
 import io.rebuilding.SimpleRule;
 
 /**
@@ -19,7 +19,11 @@ public class Problem15 {
 	 */
 	public static void main(String[] args) {
 		// ファイルの再編成を実施する。
-		RebuildFileManager manager = new SampleManager(new NestSearch(), new SimpleRule("Problem15"));
+		//RebuildFileManager manager = new SampleManager(new NestSearch(), new SimpleRule("Problem15"));
+		//manager.rebuild(Paths.get("./data/in"));
+
+		//問題③
+		RebuildFileManager manager = new BinaryFormatFileManager(new NestSearch(), new SimpleRule("Problem15"));
 		manager.rebuild(Paths.get("./data/in"));
 
 		/*
