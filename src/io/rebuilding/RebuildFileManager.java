@@ -127,7 +127,8 @@ public abstract class RebuildFileManager {
 
 					// 書き込み先が存在する場合
 					if (Files.exists(destPath)) {
-						Files.write(destPath, readFiles, charset, StandardOpenOption.APPEND);
+						//Files.write(destPath, readFiles, charset, StandardOpenOption.APPEND);
+						Files.write(destPath, readFiles, charset, StandardOpenOption.TRUNCATE_EXISTING);
 					} else {
 						// ファイルが存在しない場合
 						Files.write(destPath, readFiles, charset, StandardOpenOption.CREATE);
@@ -149,22 +150,28 @@ public abstract class RebuildFileManager {
 	 * @return 「。」の後に改行コードを追加
 	 */
 	protected List<String> addNewLine(List<String> readAllFiles, Charset charset) {
-		// 「。」を対象ファイルの文字コードに合わせて変換
+
 		String delimiter = "。";
-		delimiter = new String(delimiter.getBytes(StandardCharsets.UTF_8), charset);
+
+		// 「。」を対象ファイルの文字コードに合わせて変換→不要
+		// delimiter = new String(delimiter.getBytes(StandardCharsets.UTF_8), charset);
 
 		List<String> readFiles = new ArrayList<>();
-		//StringBuilder builder = new StringBuilder();
 
 		for (String str : readAllFiles) {
 			// 1行を「。」で区切る
 			String line[] = str.split(delimiter);
 			// 「。」の後に改行コードを入れる
 			for (String s : line) {
-				readFiles.add(s);
-				// 区切ったことで消える「。」を追加
-				readFiles.add(delimiter);
-				readFiles.add(System.lineSeparator());
+				// 1行ごとにリストに追加する
+				StringBuilder builder = new StringBuilder();
+				builder.append(s);
+				// 空行でなければ「。」を追加
+				if (!s.isEmpty()) {
+					builder.append(delimiter);
+				}
+
+				readFiles.add(builder.toString());
 			}
 		}
 
