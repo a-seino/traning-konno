@@ -6,11 +6,11 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-
 
 /**
  * ファイルを再編成するための抽象クラス
@@ -18,127 +18,168 @@ import java.util.stream.Collectors;
  */
 public abstract class RebuildFileManager {
 
-    private PathSearch search;
+	private PathSearch search;
 
-    private RebuildRule rule;
+	private RebuildRule rule;
 
-    private RebuildFileManager() {
-    }
+	private RebuildFileManager() {
+	}
 
-    /**
-     * コンストラクタ
-     * @param search パス探索用インターフェース
-     * @param rule 再編成ルール用インターフェース
-     */
-    public RebuildFileManager(PathSearch search, RebuildRule rule) {
-        this.search = search;
-        this.rule = rule;
-    }
+	/**
+	 * コンストラクタ
+	 * @param search パス探索用インターフェース
+	 * @param rule 再編成ルール用インターフェース
+	 */
+	public RebuildFileManager(PathSearch search, RebuildRule rule) {
+		this.search = search;
+		this.rule = rule;
+	}
 
-    /**
-     * 引数で指定されたパス配下のファイルを再編成する。
-     * @param path 編成対象パス
-     */
-    public void rebuild(Path path) {
+	/**
+	 * 引数で指定されたパス配下のファイルを再編成する。
+	 * @param path 編成対象パス
+	 */
+	public void rebuild(Path path) {
 
-        // 探索したパス一覧を取得する
-        List<Path> getPathList = search.search(path);
+		// 探索したパス一覧を取得する
+		List<Path> getPathList = search.search(path);
 
-        // パス一覧より対象のリストを取得する
-        List<Path> targetPathList =
-                getPathList.stream()
-                .filter(p -> rule.isTarget(p)) // 編成対象のもののみを抽出
-                .collect(Collectors.toList()); // リストにして返却
+		// パス一覧より対象のリストを取得する
+		List<Path> targetPathList = getPathList.stream()
+				.filter(p -> rule.isTarget(p)) // 編成対象のもののみを抽出
+				.collect(Collectors.toList()); // リストにして返却
 
-        // 変換ルールを作成する
-        Map<Path, List<Path>> rebuildMap = rule.rebuildPaths(targetPathList, getRebuildRule());
+		// 変換ルールを作成する
+		Map<Path, List<Path>> rebuildMap = rule.rebuildPaths(targetPathList, getRebuildRule());
 
-        // ファイルを再編成する
-        makeRebuildFiles(rebuildMap);
+		// ファイルを再編成する
+		makeRebuildFiles(rebuildMap);
 
-    }
+	}
 
-    /**
-     * 引数で取得したパス文字列の先頭の「in」を「out」に変更して返却する<br>
-     * Functionを作成する。
-     * @return ルール変換用のFunction
-     */
-    abstract Function<Path, Path> getRebuildRule();
+	/**
+	 * 引数で取得したパス文字列の先頭の「in」を「out」に変更して返却する<br>
+	 * Functionを作成する。
+	 * @return ルール変換用のFunction
+	 */
+	abstract Function<Path, Path> getRebuildRule();
 
-    /**
-     * 引数で受け取ったファイルの文字コードを判断する
-     * @param path 判定対象ファイルパス
-     * @return 判定対象結果
-     */
-    protected Charset judgeCharset(Path path) {
+	/**
+	 * 引数で受け取ったファイルの文字コードを判断する
+	 * @param path 判定対象ファイルパス
+	 * @return 判定対象結果
+	 */
+	protected Charset judgeCharset(Path path) {
 
-        Charset charset = null;
+		Charset charset = null;
 
-        /*
-         * かなり頑張れば可能だが、今回はファイル名で
-         * 文字コード判断とする
-         */
+		/*
+		 * かなり頑張れば可能だが、今回はファイル名で
+		 * 文字コード判断とする
+		 */
 
-        // 文字コード判定
-        if (path.toString().indexOf("utf8") != -1) {
-            charset = StandardCharsets.UTF_8;
-        } else if (path.toString().indexOf("euc") != -1) {
-            charset = Charset.forName("EUC-JP");
-        } else if (path.toString().indexOf("sjis") != -1) {
-            charset = Charset.forName("SJIS");
-        }
+		// 文字コード判定
+		if (path.toString().indexOf("utf8") != -1) {
+			charset = StandardCharsets.UTF_8;
+		} else if (path.toString().indexOf("euc") != -1) {
+			charset = Charset.forName("EUC-JP");
+		} else if (path.toString().indexOf("sjis") != -1) {
+			charset = Charset.forName("SJIS");
+		}
 
-        return charset;
-    }
+		return charset;
+	}
 
-    /**
-     * 変換ルールより、ファイルを再編成して出力する
-     * @param rebuildMap 再編成ルール
-     */
-    protected void makeRebuildFiles(Map<Path, List<Path>> rebuildMap) {
-        // 書き込み先のディレクトリを先に作成しておく
-        rebuildMap.keySet().stream().forEach(p -> {
-            // 書き込み対象の親ディレクトリが存在しない場合作成
-            if (!Files.exists(p.getParent())) {
-                try {
-                    Files.createDirectories(p.getParent());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
+	/**
+	 * 変換ルールより、ファイルを再編成して出力する
+	 * @param rebuildMap 再編成ルール
+	 */
+	protected void makeRebuildFiles(Map<Path, List<Path>> rebuildMap) {
+		// 書き込み先のディレクトリを先に作成しておく
+		rebuildMap.keySet().stream().forEach(p -> {
+			// 書き込み対象の親ディレクトリが存在しない場合作成
+			if (!Files.exists(p.getParent())) {
+				try {
+					Files.createDirectories(p.getParent());
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		});
 
-        // ファイル作成
-        for (Path path : rebuildMap.keySet()) {
-            // 書き込み先ファイル
-            Path destPath = path;
 
-            // 読み込みファイル
-            List<Path> srcPaths = rebuildMap.get(path);
+		// ファイル作成
+		for (Path path : rebuildMap.keySet()) {
+			// 書き込み先ファイル
+			Path destPath = path;
 
-            // 読み込んだファイルを書き込み先に出力していく
-            for (Path srcPath : srcPaths) {
-                Charset charset = judgeCharset(srcPath);
+			// 読み込みファイル
+			List<Path> srcPaths = rebuildMap.get(path);
 
-                // ファイルの読み込み
-                try {
-                    List<String> readFiles = Files.readAllLines(srcPath, charset);
+			// 読み込んだファイルを書き込み先に出力していく
+			for (Path srcPath : srcPaths) {
+				Charset charset = judgeCharset(srcPath);
 
-                    // 書き込み先が存在する場合
-                    if (Files.exists(destPath)) {
-                        Files.write(destPath, readFiles, charset, StandardOpenOption.APPEND);
-                    } else {
-                        // ファイルが存在しない場合
-                        Files.write(destPath, readFiles, charset, StandardOpenOption.CREATE);
-                    }
+				// ファイルの読み込み
+				try {
+					// List<String> readFiles = Files.readAllLines(srcPath, charset);
+					List<String> readAllLines = Files.readAllLines(srcPath, charset);
+					List<String> readFiles = addNewLine(readAllLines, charset);
 
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+					// 書き込み先が存在する場合
+					if (Files.exists(destPath)) {
+						//Files.write(destPath, readFiles, charset, StandardOpenOption.APPEND);
+						Files.write(destPath, readFiles, charset, StandardOpenOption.TRUNCATE_EXISTING);
+					} else {
+						// ファイルが存在しない場合
+						Files.write(destPath, readFiles, charset, StandardOpenOption.CREATE);
+					}
 
-            }
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 
-        }
-    }
+			}
+
+		}
+	}
+
+	/**
+	 * 「。」の後に改行を追加し、そのListを返す
+	 * @param readAllFiles 対象ファイルの全行
+	 * @param charset ファイルの文字コード
+	 * @return 「。」の後に改行コードを追加
+	 */
+	protected List<String> addNewLine(List<String> readAllFiles, Charset charset) {
+
+		String delimiter = "。";
+
+		// 「。」を対象ファイルの文字コードに合わせて変換→不要
+		// delimiter = new String(delimiter.getBytes(StandardCharsets.UTF_8), charset);
+
+		List<String> readFiles = new ArrayList<>();
+
+		for (String str : readAllFiles) {
+			// 1行を「。」で区切る
+			String line[] = str.split(delimiter);
+
+			StringBuilder builder = new StringBuilder();
+
+			for (String s : line) {
+				// 1行ごとにリストに追加する
+				builder.append(s);
+				// 空行でなければ「。」を追加（区切るときに消えた「。」を戻す）
+				if (!s.isEmpty()) {
+					builder.append(delimiter);
+				}
+				readFiles.add(builder.toString());
+				// StringBuilderをリセット
+				builder.setLength(0);
+			}
+		}
+
+		//readFiles.add(builder.toString());
+		return readFiles;
+	}
 
 }
