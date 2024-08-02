@@ -8,7 +8,6 @@ import java.nio.file.StandardOpenOption;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 /**
  * 問題③：
@@ -18,8 +17,8 @@ import java.util.stream.Collectors;
  *
  */
 public class BinaryFormatFileManager extends RebuildFileManager {
-	private PathSearch search;
-	private RebuildRule rule;
+	//private PathSearch search;
+	//private RebuildRule rule;
 
 	/**
 	 * コンストラクタ
@@ -43,26 +42,7 @@ public class BinaryFormatFileManager extends RebuildFileManager {
 	}
 
 	@Override
-	public void rebuild(Path path) {
-		// 探索したパス一覧を取得する
-		List<Path> getPathList = search.search(path);
-
-		// パス一覧より対象のリストを取得する
-		List<Path> targetPathList = getPathList.stream()
-				.filter(p -> rule.isTarget(p)) // 編成対象のもののみを抽出
-				.collect(Collectors.toList()); // リストにして返却
-
-		// 変換ルールを作成する
-		Map<Path, List<Path>> rebuildMap = rule.rebuildPaths(targetPathList, getRebuildRule());
-
-		makeBinaryFormatFile(rebuildMap);
-	}
-
-	/**
-	 * * 変換ルールより、ファイルを再編成して出力する
-	 * @param rebuildMap 再編成ルール
-	 */
-	protected void makeBinaryFormatFile(Map<Path, List<Path>> rebuildMap) {
+	protected void makeRebuildFiles(Map<Path, List<Path>> rebuildMap) {
 		// 書き込み先のディレクトリを先に作成しておく
 		rebuildMap.keySet().stream().forEach(p -> {
 			// 書き込み対象の親ディレクトリが存在しない場合作成
